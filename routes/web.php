@@ -13,9 +13,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [App\Http\Controllers\OrderController::class, 'index'])->name('order.form');
+
+Route::post('/order_submit', [App\Http\Controllers\OrderController::class, 'submit'])->name('order.submit');
+
+Route::get('/order', [App\Http\Controllers\DishesController::class, 'order'])->name('kitchen.order');
+
+Route::resource('/dish', App\Http\Controllers\DishesController::class);
 
 Auth::routes([
     'register' => false, // Registration Routes...
@@ -23,9 +27,4 @@ Auth::routes([
     'verify' => false, // Email Verification Routes...
     'confirm' => false,
   ]);
-
-Route::get('/order', [App\Http\Controllers\OrderController::class, 'index'])->name('home');
-Route::resource('/dish', App\Http\Controllers\DishesController::class);
-
-Auth::routes();
 

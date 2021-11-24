@@ -20,28 +20,41 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">DataTable with default features</h3>
+                <h3 style="display:inline-block">Dishes</h3>
+                <a href="/dish/create" class="btn btn-success" style="float:right;">Create</a>
+                @if (session('message'))
+                    <div class="alert alert-success">
+                        {{ session('message') }}
+                    </div>
+                @endif
               </div>
               <!-- /.card-header -->
               <div class="card-body">
                 <table id="dish" class="table table-bordered table-striped">
                   <thead>
-                  <tr>
-                    <th>Rendering engine</th>
-                    <th>Browser</th>
-                    <th>Platform(s)</th>
-                    <th>Engine version</th>
-                    <th>CSS grade</th>
-                  </tr>
+                    <tr>
+                        <th>Dish Name</th>
+                        <th>Category Name</th>
+                        <th>Created</th>
+                        <th>Action</th>
+                    </tr>
                   </thead>
                   <tbody>
-                  <tr>
-                    <td>Other browsers</td>
-                    <td>All others</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>U</td>
-                  </tr>
+                    @foreach($dishes as $dish) 
+                      <tr>
+                          <td>{{$dish->name}}</td>
+                          <td>{{$dish->category->name}}</td>
+                          <td>{{$dish->created_at}}</td>
+                          <td>
+                            <a href="/dish/{{$dish->id}}/edit" class="btn btn-primary">Edit</a>
+                            <form action="/dish/{{$dish->id}}" method="post" style="display:inline-block">
+                              @csrf
+                              @method('delete')
+                              <button class="btn btn-danger" type="submit" onclick="return confirm('Are you sure you want to delete this item?');">Del</button>
+                            </form>
+                        </td>
+                      </tr>
+                    @endforeach
                   </tbody>
                 </table>
               </div>
@@ -59,7 +72,9 @@
   </div>
   <!-- /.content-wrapper -->
 
+  <script src="plugins/jquery/jquery.min.js"></script>
 <script>
+  
   $(function () {
     // $("#example1").DataTable({
     //   "responsive": true, "lengthChange": false, "autoWidth": false,
@@ -68,7 +83,7 @@
     $('#dish').DataTable({
       "paging": true,
       "lengthChange": false,
-      "searching": false,
+      "pageLength": 10,
       "ordering": true,
       "info": true,
       "autoWidth": false,
